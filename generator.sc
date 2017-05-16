@@ -192,7 +192,7 @@ case class StaticSiteGenerator(val b2conf: SiteGenConf) {
 
   private[this] def _generateIndexPage(groupByMonth:  Map[String, Seq[BlogPost]]) = {
     _pageLayout(
-      Seq(head(title(b2conf.site.title), bootstrapCss, blogStyleHome)),
+      Seq(head(title(b2conf.site.title), stylesheets, blogStyleHome)),
       Seq(h2(cls := "blog-title", b2conf.site.title)),
       getSortedPostListForIndexPage(groupByMonth)
     )
@@ -219,7 +219,7 @@ case class StaticSiteGenerator(val b2conf: SiteGenConf) {
     )
 
     _pageLayout(
-      Seq(head(title(b2conf.site.title), bootstrapCss, blogStylePosts)),
+      Seq(head(title(b2conf.site.title), stylesheets, blogStylePosts)),
       Seq(h2(cls := "blog-title", a(b2conf.site.title, href := "../" + IndexFilename))),
       htmlContent
     )
