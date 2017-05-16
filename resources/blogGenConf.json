@@ -1,0 +1,18 @@
+{
+  "directories": {
+    "content": "posts",
+    "resources": "resources",
+    "output": "site",
+    "statics": "statics"
+  },
+  "site": {
+    "title": "My Blog",
+    "description": "A blog about everything...",
+    "indexfile": "index.html",
+    "lastmod": "2017-05-15"
+  },
+  "server": {
+    "port": 8080,
+    "webroot": "site"
+  }
+}
