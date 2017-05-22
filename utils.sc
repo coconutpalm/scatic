@@ -1,5 +1,12 @@
 import ammonite.ops._
 
+import java.util.{Collections => JCollections,
+                  List => JList,
+                  Map => JMap,
+                  Set => JSet,
+                  Calendar => JCalendar}
+import java.text.SimpleDateFormat
+
 import $ivy.`com.atlassian.commonmark:commonmark:0.5.1`
 import org.commonmark.html.HtmlRenderer
 import org.commonmark.node._
@@ -8,9 +15,6 @@ import org.commonmark.Extension._
 
 import $ivy.`com.atlassian.commonmark:commonmark-ext-yaml-front-matter:0.9.0`
 import org.commonmark.ext.front.matter._
-
-import java.util.{Collections, List, Map, Set, Calendar}
-import java.text.SimpleDateFormat
 
 /*
  * StringUtils
@@ -22,6 +26,17 @@ object StringUtils {
 } // End of StringUtils
 
 /*
+ * ListUtils
+ */
+object ListUtils {
+  def occurrencesCounter(values: List[String]): Map[String, Int] = {
+    values.foldLeft(Map[String, Int]() withDefaultValue 0) {
+      (m,x) => m + (x -> ( 1 + m(x) ))
+    }
+  }
+} // End of ListUtils
+
+/*
  * DateUtils
  */
 object DateUtils {
@@ -29,7 +44,7 @@ object DateUtils {
   val yearMonthFormatter = new SimpleDateFormat("yyyy-MMMM")
   val monthYearFormatter = new SimpleDateFormat("MMMM yyyy")
 
-  val today = dateFormatter.format(Calendar.getInstance().getTime)
+  val today = dateFormatter.format(JCalendar.getInstance().getTime)
 
   def dateToYearMonth(date: String) =
     yearMonthFormatter.format(dateFormatter.parse(date))
@@ -43,7 +58,7 @@ object DateUtils {
  */
 object ContentUtils {
   // Commonmark Extensions
-  val EXTENSIONS = Collections.singleton(YamlFrontMatterExtension.create())
+  val EXTENSIONS = JCollections.singleton(YamlFrontMatterExtension.create())
   val PARSER = Parser.builder().extensions(EXTENSIONS).build()
   val RENDERER = HtmlRenderer.builder().extensions(EXTENSIONS).build()
 
@@ -62,7 +77,7 @@ object ContentUtils {
   } // End of extractPreview
 
   // extractMetadata
-  def extractMetadata(mdContent: String): Map[String, List[String]] = {
+  def extractMetadata(mdContent: String): JMap[String, JList[String]] = {
     val visitor = new YamlFrontMatterVisitor()
     val document: Node = PARSER.parse(mdContent)
     document.accept(visitor)
