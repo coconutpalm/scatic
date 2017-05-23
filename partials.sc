@@ -1,5 +1,9 @@
+import scala.collection.mutable.ListBuffer
+
 import scalatags.Text.all._
 import scalatags.Text.tags2.nav
+
+import $file.utils, utils.ContentUtils
 
 object Partials {
 
@@ -28,7 +32,28 @@ object Partials {
     )
   )
 
-  val sidebar = Seq[Frag] (
+  private[this] def categoriesCounterFrag(categoriesListBuffer: ListBuffer[String]) = {
+    val values = ContentUtils.buildMetadataMap(categoriesListBuffer.toList).toSeq
+    Seq[Frag](
+      h4("Categories:"),
+      ol(cls := "list-unstyled", for( (cat, counter) <- values) yield
+        li(a(s"$cat ($counter)", href := "#"))
+      )
+    )
+  }
+
+  private[this] def tagsCounterFrag(tagsListBuffer: ListBuffer[List[String]]) = {
+    val values = ContentUtils.buildMetadataMap(tagsListBuffer.toList.flatten).toSeq
+    Seq[Frag](
+      h4("Tags:"),
+      ol(cls := "list-unstyled", for( (tag, counter) <- values) yield
+        li(a(s"$tag ($counter)", href := "#"))
+      )
+    )
+  }
+
+  def sidebar(categoriesListBuffer: ListBuffer[String], tagsListBuffer: ListBuffer[List[String]]) = {
+    Seq[Frag] (
       div(cls := "sidebar-module sidebar-module-inset",
         h4("About"),
         p("Etiam porta",
@@ -36,8 +61,11 @@ object Partials {
           "mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur."
         )
       ),
-      div(cls := "sidebar-module", elsewhereLinks)
-  )
+      div(cls := "sidebar-module", elsewhereLinks),
+      div(cls := "sidebar-module", categoriesCounterFrag(categoriesListBuffer)),
+      div(cls := "sidebar-module", tagsCounterFrag(tagsListBuffer))
+    )
+  }
 
   val footerContent = Seq[Frag] (
     p("Built using ",

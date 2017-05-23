@@ -3,6 +3,8 @@ import ammonite.ops._
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
 import scala.collection.immutable.TreeMap
+import scala.collection.mutable.ListBuffer
+import java.util.{List => JList, Map => JMap}
 
 import $ivy.`com.lihaoyi::scalatags:0.6.5`
 import scalatags.Text.all._
@@ -83,6 +85,9 @@ case class StaticSiteGenerator(val b2conf: SiteGenConf) {
   val ContentFolder = b2conf.directories.content
   val StaticsFolder = b2conf.directories.statics
 
+  var categoriesListBuffer = new ListBuffer[String]()
+  var tagsListBuffer = new ListBuffer[List[String]]()
+
   def generate() = {
     // Site generation starts here
     println("\n* Generating site...")
@@ -129,7 +134,7 @@ case class StaticSiteGenerator(val b2conf: SiteGenConf) {
             div(cls := "col-sm-8 blog-main",
               content
             ),
-            div(cls := "col-sm-3 col-sm-offset-1 blog-sidebar", sidebar)
+            div(cls := "col-sm-3 col-sm-offset-1 blog-sidebar", sidebar(categoriesListBuffer, tagsListBuffer))
           )
         ),
         footer(cls := "blog-footer", footerContent),
@@ -138,6 +143,9 @@ case class StaticSiteGenerator(val b2conf: SiteGenConf) {
       )
     )
   } // End of _pageLayout
+
+  private[this] def _addToCategoriesBuffer(value: String) = categoriesListBuffer += value
+  private[this] def _addToTagsBuffer(value: List[String]) = tagsListBuffer += value
 
   // _getpostList
   private[this] def _getPostList(pathToPosts: Path): Seq[BlogPost] = {
@@ -154,8 +162,9 @@ case class StaticSiteGenerator(val b2conf: SiteGenConf) {
       val htmlFilename = StringUtils.mdNameToHtml(filename)
       val category = metadata.get("category")(0)
       val tags = metadata.get("tags").mkString(", ")
-      //val tags = metadata.get("tags").asScala.toList
-      //println(tags)
+
+      _addToCategoriesBuffer(category)
+      _addToTagsBuffer(metadata.get("tags").asScala.toList)
 
       BlogPost(title, date, preview, content, htmlFilename, category, tags )
     }

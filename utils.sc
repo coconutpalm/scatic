@@ -1,4 +1,5 @@
 import ammonite.ops._
+import scala.collection.mutable.ListBuffer
 
 import java.util.{Collections => JCollections,
                   List => JList,
@@ -84,5 +85,10 @@ object ContentUtils {
 
     return visitor.getData()
   } // End of extractMetadata
+
+  // buildMetadataMap
+  def buildMetadataMap(values: List[String]): Map[String, Int] = {
+    ListUtils.occurrencesCounter(values)
+  } // End of buildMetadataMap
 
 } // End of ContentUtils
