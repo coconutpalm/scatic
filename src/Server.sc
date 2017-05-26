@@ -1,9 +1,13 @@
-// server.sc
+// Server.sc
+
 import $ivy.`org.eclipse.jetty:jetty-server:9.4.5.v20170502`
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.handler.{DefaultHandler, HandlerList, ResourceHandler}
 
-case class StaticServer(val port: Int, val webroot: String) {
+/*
+ * ScaticServer
+ */
+case class ScaticServer(val port: Int, val webroot: String) {
   val server = {
     println(s"Starting the HTTP server....")
     val jettyServer = new Server(port)
@@ -40,4 +44,5 @@ case class StaticServer(val port: Int, val webroot: String) {
         println("Error occurred while trying to stop the HTTP server: " +  e)
     }
   }
-}
+
+} // End of ScaticServer

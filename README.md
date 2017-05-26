@@ -14,6 +14,8 @@ It is freely inspired by:
 
 - Parsing content from Markdown files using [Atlassian CommonMark](https://github.com/atlassian/commonmark-java)
 - YAML front matter for post's metadata (category, tags, date, ...) using [Atlassian CommonMark Extension YAML front matter](https://github.com/atlassian/commonmark-java/tree/master/commonmark-ext-yaml-front-matter)
+- Posts by category
+- Posts by tag
 - Rendering HTML using [Scalatags](http://www.lihaoyi.com/scalatags/)
 - Project skeleton generation
 - Embedded [Jetty](http://www.eclipse.org/jetty/) server for easy development
@@ -25,21 +27,21 @@ It is freely inspired by:
 
 ## Quickstart
 
-The `main.sc` script works in three operational modes (generate, serve and clean). Pass the right arg to the script in order to execute it.
+The `Main.sc` script works in three operational modes (generate, serve and clean). Pass the right arg to the script in order to execute it.
 
 1. install [Ammonite](https://github.com/lihaoyi/Ammonite)
 2. Open a new terminal windows
 3. Clone or download the repos `$ git clone https://github.com/indaco/scatic`
-4. Start generating with sample content `$ amm main.sc -- --mode generate`
-5. Serve the result `$ amm main.sc -- --mode serve`
+4. Start generating with sample content `$ amm Main.sc -- --mode generate`
+5. Serve the result `$ amm Main.sc -- --mode serve`
 6. Open a browser windows to `localhost:8080`
 
 ## Write your own content
 
 Add your blog posts to `resources/posts` as Markdown files and:
 
-- Generate the site: `$ amm main.sc -- --mode generate`
-- Serve the result: `$ amm main.sc -- --mode serve`
+- Generate the site: `$ amm Main.sc -- --mode generate`
+- Serve the result: `$ amm Main.sc -- --mode serve`
 - Open a browser windows: `localhost:8080`
 
 ## Copyright and License

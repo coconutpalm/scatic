@@ -1,3 +1,5 @@
+// Utils.sc
+
 import ammonite.ops._
 import scala.collection.mutable.ListBuffer
 
@@ -24,6 +26,8 @@ object StringUtils {
   def mdNameToHtml(name: String) = name.stripSuffix(".md").replace(" ", "-").toLowerCase + ".html"
 
   def mdFilenameToTitle(name: String) = name.replace("_", " ")
+
+
 } // End of StringUtils
 
 /*

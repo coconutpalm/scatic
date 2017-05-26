@@ -9,6 +9,8 @@
     "title": "My Blog",
     "description": "A blog about everything...",
     "indexfile": "index.html",
+    "groupedbytagfile": "byTag.html",
+    "groupedbycategoryfile": "byCategory.html",
     "lastmod": "2017-05-15"
   },
   "server": {

@@ -1,8 +1,10 @@
-// main.sc
+// Main.sc
+
 import ammonite.ops._
 
-import $file.generator, generator.{SiteGenConfigParser, StaticSiteGenerator}
-import $file.server, server.StaticServer
+import $file.src.ConfigParser, ConfigParser.ScaticConfigParser
+import $file.src.Generator, Generator.ScaticGenerator
+import $file.src.Server, Server.ScaticServer
 
 // Remove all previous generated files
 def cleanup(outputFolder: String) = {
@@ -19,13 +21,13 @@ def cleanup(outputFolder: String) = {
 def main(mode: String) = {
   println("\n**********************************")
   val confFilePath = cwd/'resources/"blogGenConf.json"
-  val b2conf = SiteGenConfigParser.parseOrExit(confFilePath)
+  val b2conf = ScaticConfigParser.parseOrExit(confFilePath)
 
   mode match {
    case "generate" =>
       cleanup(b2conf.get.directories.output)
-      StaticSiteGenerator(b2conf.get).generate()
-   case "serve"    => StaticServer(b2conf.get.server.port, b2conf.get.directories.output).start()
+      ScaticGenerator(b2conf.get).generate()
+   case "serve"    => ScaticServer(b2conf.get.server.port, b2conf.get.directories.output).start()
    case "clean"    => cleanup(b2conf.get.directories.output)
   }
   println("\n**********************************\n")
