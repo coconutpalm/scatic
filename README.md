@@ -32,16 +32,16 @@ The `Main.sc` script works in three operational modes (generate, serve and clean
 1. install [Ammonite](https://github.com/lihaoyi/Ammonite)
 2. Open a new terminal windows
 3. Clone or download the repos `$ git clone https://github.com/indaco/scatic`
-4. Start generating with sample content `$ amm Main.sc -- --mode generate`
-5. Serve the result `$ amm Main.sc -- --mode serve`
+4. Start generating with sample content `$ amm main.sc -- --mode generate`
+5. Serve the result `$ amm main.sc -- --mode serve`
 6. Open a browser windows to `localhost:8080`
 
 ## Write your own content
 
 Add your blog posts to `resources/posts` as Markdown files and:
 
-- Generate the site: `$ amm Main.sc -- --mode generate`
-- Serve the result: `$ amm Main.sc -- --mode serve`
+- Generate the site: `$ amm main.sc -- --mode generate`
+- Serve the result: `$ amm main.sc -- --mode serve`
 - Open a browser windows: `localhost:8080`
 
 ## Copyright and License

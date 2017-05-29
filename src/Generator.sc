@@ -58,9 +58,10 @@ case class ScaticGenerator(val b2conf: SiteGenConf) {
     write(cwd/OutputFolder/GroupedByCategoryFilename, _createPageGroupedByCategory(groupByCategory))
 
     // generate and save the byTag page
-    val groupByTag =  postList.flatMap(bp => bp.tags.map(tag => (tag, bp)))
-                              .groupBy(_._1)
-                              .mapValues(_.map(_._2))
+    val groupByTag =
+      postList.flatMap(bp => bp.tags.map(tag => (tag, bp)))
+              .groupBy(_._1)
+              .mapValues(_.map(_._2))
     println("\n* Creating 'byTag' page...")
     write(cwd/OutputFolder/GroupedByTagFilename, _createPageGroupedByTag(groupByTag))
 
@@ -92,7 +93,9 @@ case class ScaticGenerator(val b2conf: SiteGenConf) {
             div(cls := "col-sm-8 blog-main",
                 content
             ),
-            div(cls := "col-sm-3 col-sm-offset-1 blog-sidebar", sidebar(categoriesListBuffer, tagsListBuffer))
+            div(cls := "col-sm-3 col-sm-offset-1 blog-sidebar",
+              sidebar(categoriesListBuffer, tagsListBuffer)
+            )
           )
         ),
         footer(cls := "blog-footer", footerContent),
@@ -138,7 +141,9 @@ case class ScaticGenerator(val b2conf: SiteGenConf) {
     val htmlContent = Seq(
       div(cls := "blog-post",
         h3(cls := "blog-post-title",post.title),
-        p(cls := "blog-post-category", "Category: ", a(post.category, href := s"/byCategory.html#${post.category}", onclick := s"""filterBy("${post.category}");""")),
+        p(cls := "blog-post-category", "Category: ",
+          a(post.category, href := s"/byCategory.html#${post.category}", onclick := s"""filterBy("${post.category}");""")
+        ),
         p(raw(post.content)),
         br,
         div(id := "tags-list",
