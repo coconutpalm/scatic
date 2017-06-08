@@ -120,11 +120,11 @@ case class ScaticGenerator(val b2conf: SiteGenConf) {
       val preview = ContentUtils.extractPreview(mdContent)
       val content = ContentUtils.extractContent(mdContent)
       val htmlFilename = StringUtils.mdNameToHtml(filename)
-      val category = metadata.get("category")(0)
-      val tagsList = metadata.get("tags").asScala.toList
+      val category = metadata.get("category")(0).capitalize
+      val tagsList = metadata.get("tags").asScala.toList.map(_.capitalize)
 
       _addToCategoriesBuffer(category)
-      _addToTagsBuffer(metadata.get("tags").asScala.toList)
+      _addToTagsBuffer(tagsList)
 
       BlogPost(title, date, preview, content, htmlFilename, category, tagsList)
     }
