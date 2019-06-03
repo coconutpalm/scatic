@@ -37,6 +37,7 @@ Temporary Items
 *.class
 *.log
 target/**/**
+.metals
 
 ### Blog Generator Output files ###
 site/**/**
