@@ -1,4 +1,7 @@
 // Main.sc
+import $file.predef
+val shellSession = ammonite.shell.ShellSession()
+import shellSession._
 
 import ammonite.ops._
 
@@ -8,9 +11,9 @@ import $file.src.Server, Server.ScaticServer
 
 // Remove all previous generated files
 def cleanup(outputFolder: String) = {
-  if(exists! cwd/outputFolder) {
+  if(exists! pwd/outputFolder) {
     println("\n* Cleaning the output folder...")
-    rm! cwd/outputFolder
+    rm! pwd/outputFolder
   }
 }
 
@@ -20,7 +23,7 @@ def cleanup(outputFolder: String) = {
 @main
 def main(mode: String) = {
   println("\n**********************************")
-  val confFilePath = cwd/'resources/"blogGenConf.json"
+  val confFilePath = pwd/'resources/"blogGenConf.json"
   val b2conf = ScaticConfigParser.parseOrExit(confFilePath)
 
   mode match {

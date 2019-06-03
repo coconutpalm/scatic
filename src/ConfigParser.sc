@@ -16,7 +16,7 @@ object ScaticConfigParser {
 
     try {
       val confStr = read(pathToConfigFile).toString
-      val res = upickle.json.read(confStr)
+      val res = ujson.read(confStr)
 
       val directories = (Directories.apply _).tupled(_decodeDirectories(res))
       val site        = (Site.apply _).tupled(_decodeSite(res))
@@ -29,14 +29,14 @@ object ScaticConfigParser {
     }
   } // End of parseOrExit
 
-  private[this] def _decodeDirectories(jsonStr: upickle.Js.Value): Tuple4[String, String, String, String] = {
+  private[this] def _decodeDirectories(jsonStr: ujson.Js.Value): Tuple4[String, String, String, String] = {
     ( jsonStr("directories")("content").toString.replace("\"", ""),
       jsonStr("directories")("resources").toString.replace("\"", ""),
       jsonStr("directories")("output").toString.replace("\"", ""),
       jsonStr("directories")("statics").toString.replace("\"", "") )
   }
 
-  private[this] def _decodeSite(jsonStr: upickle.Js.Value): Tuple6[String, String, String, String, String, String] = {
+  private[this] def _decodeSite(jsonStr: ujson.Js.Value): Tuple6[String, String, String, String, String, String] = {
     ( jsonStr("site")("title").toString.replace("\"", ""),
       jsonStr("site")("description").toString.replace("\"", ""),
       jsonStr("site")("indexfile").toString.replace("\"", ""),
@@ -45,7 +45,7 @@ object ScaticConfigParser {
       jsonStr("site")("lastmod").toString.replace("\"", "") )
   }
 
-  private[this] def _decodeHttpServer(jsonStr: upickle.Js.Value): Tuple2[Int, String] = {
+  private[this] def _decodeHttpServer(jsonStr: ujson.Js.Value): Tuple2[Int, String] = {
     ( jsonStr("server")("port").toString.replace("\"", "").toInt,
       jsonStr("server")("webroot").toString.replace("\"", "") )
   }

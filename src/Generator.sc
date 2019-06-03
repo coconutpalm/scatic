@@ -1,6 +1,8 @@
 // Generator.sc
 
 import ammonite.ops._
+val shellSession = ammonite.shell.ShellSession()
+import shellSession._
 
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
@@ -38,7 +40,7 @@ case class ScaticGenerator(val b2conf: SiteGenConf) {
     println("\n* Generating site...")
 
     println("\n* Reading existing posts...")
-    val postList: List[BlogPost] = _getPostList(cwd/ResourcesFolder/ContentFolder)
+    val postList: List[BlogPost] = _getPostList(pwd/ResourcesFolder/ContentFolder)
     println(s"\n ** ${postList.size} posts ready")
 
     // generate and save post pages
@@ -50,12 +52,12 @@ case class ScaticGenerator(val b2conf: SiteGenConf) {
       case post: BlogPost => DateUtils.dateToYearMonth(post.date)
     }
     println("\n* Creating 'index' page...")
-    write(cwd/OutputFolder/IndexFilename, _createPageIndex(groupByMonth))
+    write(pwd/OutputFolder/IndexFilename, _createPageIndex(groupByMonth))
 
     // generate and save the byCategory page
     val groupByCategory =  postList.groupBy(_.category)
     println("\n* Creating 'byCategory' page...")
-    write(cwd/OutputFolder/GroupedByCategoryFilename, _createPageGroupedByCategory(groupByCategory))
+    write(pwd/OutputFolder/GroupedByCategoryFilename, _createPageGroupedByCategory(groupByCategory))
 
     // generate and save the byTag page
     val groupByTag =
@@ -63,13 +65,13 @@ case class ScaticGenerator(val b2conf: SiteGenConf) {
               .groupBy(_._1)
               .mapValues(_.map(_._2))
     println("\n* Creating 'byTag' page...")
-    write(cwd/OutputFolder/GroupedByTagFilename, _createPageGroupedByTag(groupByTag))
+    write(pwd/OutputFolder/GroupedByTagFilename, _createPageGroupedByTag(groupByTag))
 
     // copy statics (css and javascript files to the output folder)
     println(s"""\n* Saving files to "${ContentFolder}" folder ...""")
     println(s"""\n* Saving statics files to "$OutputFolder" folder...""")
-    cp(cwd/ResourcesFolder/StaticsFolder/"scatic.css", cwd/OutputFolder/"scatic.css")
-    cp(cwd/ResourcesFolder/StaticsFolder/"scatic.js", cwd/OutputFolder/"scatic.js")
+    cp(pwd/ResourcesFolder/StaticsFolder/"scatic.css", pwd/OutputFolder/"scatic.css")
+    cp(pwd/ResourcesFolder/StaticsFolder/"scatic.js", pwd/OutputFolder/"scatic.js")
   }
 
   /***************** private methods section *****************/
@@ -133,7 +135,7 @@ case class ScaticGenerator(val b2conf: SiteGenConf) {
 
   // _savePostPages and save to files
   private[this] def _savePostPages(postList:  List[BlogPost]) = for(post <- postList) {
-    write( cwd/OutputFolder/ContentFolder/post.htmlFilename, _createSinglePostPage(post) )
+    write( pwd/OutputFolder/ContentFolder/post.htmlFilename, _createSinglePostPage(post) )
   } // End of _savePostPages
 
   // _createSinglePostPage
