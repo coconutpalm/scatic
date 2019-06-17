@@ -35,30 +35,3 @@ def main(mode: String) = {
   }
   println("\n**********************************\n")
 }
-
-{
-  case class Markdown(val file: XFile, val metadata: Map[String,String])
-  case class Result(val contents: String, val destination: XFile)
-  case class Site(sources: Array[Markdown] = Array(), output: Array[Result] = Array())
-  
-  trait Task extends AbstractTask[Site]
-  
-  type FileFilter = XFile => Boolean
-  val noGitFiles = (f: XFile) => !f.getCanonicalPath.contains(".git")
-  
-  case class SourceDir(dir: XFile, sourceExtensions: String*)(implicit include: FileFilter = noGitFiles) extends Task {
-    private def filter(file: XFile) = {
-      val filePath = file.getCanonicalPath
-      include(file) && sourceExtensions.map(filePath.endsWith(_)).foldLeft(false)(_ || _)
-    }
-  
-    override def transform(old: Site) = {
-      val additional = dir.walk.filter(filter)
-      Site(old.sources ++ additional, old.output)
-    }
-  }
-  
-  val job = SourceDir(wd / 'src) compose identity[Site => Site]
-  }
-  
-  

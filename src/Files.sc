@@ -2,9 +2,11 @@
 //
 // See tests at the bottom for usage
 
+
 import $file.Testing
 import Testing._
 import java.io._
+import java.nio.file._
 import scala.io.Source
 
 // home is where the heart is
@@ -41,6 +43,11 @@ def withFile[T](path: String)(f: Source => T): T = withFile(new File(path))(f)
 /** java.io.File += Walking */
 type XFile = File with Walking
 
+/** A predicate for filtering file names */
+type FileFilter = String => Boolean
+val Yes = (s: String) => true
+
+
 /** Usage: new java.io.File("/some/where") with Walking */
 trait Walking extends Internal.MetaPath[File] {
   override val xthis: XFile = this.asInstanceOf[XFile]
@@ -54,11 +61,11 @@ trait Walking extends Internal.MetaPath[File] {
   }
 
   // Specialize this trait's implementation
-  override def listXFiles: List[XFile] = super.listXFiles.map(_.asInstanceOf[XFile])
+  override def listXFiles(inclusions: FileFilter = Yes): List[XFile] = super.listXFiles(inclusions).map(_.asInstanceOf[XFile])
 
   /** Lazy recursive stream of all MetaPaths */
-  override def walk: Stream[XFile] = super.walk.map(_.asInstanceOf[XFile])
-  override def walkAll: List[XFile] = walk.toList
+  override def walk(inclusions: FileFilter = s => true): Stream[XFile] = super.walk(inclusions).map(_.asInstanceOf[XFile])
+  override def walkAll(inclusions: FileFilter = s => true): List[XFile] = walk(inclusions).toList
 
   // Path handling
 
@@ -94,38 +101,41 @@ object Internal extends Testing {
     /** (from java.io.File API) */
     def list: Array[String]
 
+
     /** How we get back to the top */
     val ancestors: List[EnhancedUnderlying] = Nil
 
     /** How we know how much farther to go at this level */
     val nextSiblings: List[EnhancedUnderlying] = Nil
 
-    /** Like #listFiles, but returning EnhancedUnderlying */
-    def listXFiles: List[EnhancedUnderlying] = childNames2MetaPaths(xthis.list.toList)
+    /** Like #listFiles, but with optional filtering and returning EnhancedUnderlying */
+    def listXFiles(inclusions: FileFilter = s => true): List[EnhancedUnderlying] = {
+      childNames2MetaPaths(xthis.list.filter(inclusions).toList)
+    }
 
     /** The next MetaPath, depth-first style */
-    def next: Option[EnhancedUnderlying] = {
+    def next(inclusions: FileFilter = s => true): Option[EnhancedUnderlying] = {
       def maybeNextSibling = nextSiblings match {
         case sibling :: _ => Some(sibling)
         case Nil          => ancestorNextSibling
       }
 
-      if (isDirectory) listXFiles match {
+      if (isDirectory) listXFiles(inclusions) match {
         case xfile :: _ => Some(xfile)
         case Nil        => maybeNextSibling
       } else maybeNextSibling
     }
 
     /** Lazy recursive stream of all MetaPaths */
-    def walk: Stream[EnhancedUnderlying] = xthis #:: {
-      next match {
+    def walk(inclusions: FileFilter = s => true): Stream[EnhancedUnderlying] = xthis #:: {
+      next(inclusions) match {
         case None => Stream.Empty
         case Some(xfile) => xfile.walk
       }
     }
 
     /** Recursive file/directory list */
-    def walkAll: List[EnhancedUnderlying] = walk.toList
+    def walkAll(inclusions: FileFilter = s => true): List[EnhancedUnderlying] = walk(inclusions).toList
 
     /* How we return to the top */
     private def ancestorNextSibling: Option[EnhancedUnderlying] = ancestors match {
@@ -202,4 +212,3 @@ object Internal extends Testing {
   }
 }
 Internal.runTests
-
